@@ -17,7 +17,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
 import { useDeleteJobMutation } from "@/features/jobs/hooks";
 import type { FineTuneJob } from "@/lib/types/jobs";
 
@@ -106,7 +113,10 @@ export function JobsTable({ jobs }: JobsTableProps) {
           </Table>
         )}
       </CardContent>
-      <AlertDialog open={Boolean(jobPendingDelete)} onOpenChange={(open) => !open && setJobPendingDelete(null)}>
+      <AlertDialog
+        open={Boolean(jobPendingDelete)}
+        onOpenChange={(open) => !open && setJobPendingDelete(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete job?</AlertDialogTitle>

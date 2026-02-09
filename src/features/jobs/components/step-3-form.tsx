@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -23,8 +23,13 @@ export function Step3Form() {
   const setDraft = useSetAtom(setDraftAtom);
   const resetDraft = useSetAtom(resetDraftAtom);
   const mutation = useCreateJobMutation();
+  const [submittedSuccessfully, setSubmittedSuccessfully] = useState(false);
 
   useEffect(() => {
+    if (submittedSuccessfully) {
+      return;
+    }
+
     if (
       !draft.jobName ||
       !draft.baseModelId ||
@@ -34,7 +39,15 @@ export function Step3Form() {
     ) {
       router.replace("/jobs/new/step-1");
     }
-  }, [draft.baseModelId, draft.evaluationEpochs, draft.jobName, draft.trainingEpochs, draft.warmupEpochs, router]);
+  }, [
+    draft.baseModelId,
+    draft.evaluationEpochs,
+    draft.jobName,
+    draft.trainingEpochs,
+    draft.warmupEpochs,
+    router,
+    submittedSuccessfully
+  ]);
 
   const form = useForm<Step3Values>({
     resolver: zodResolver(step3Schema),
@@ -55,9 +68,10 @@ export function Step3Form() {
         warmupEpochs: draft.warmupEpochs ?? 0,
         learningRate: Number(values.learningRate)
       });
+      setSubmittedSuccessfully(true);
       toast.success("Fine-tuning job created");
       resetDraft();
-      router.push("/");
+      router.replace("/");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to create job");
     }
@@ -69,7 +83,11 @@ export function Step3Form() {
       : null;
 
   return (
-    <FlowLayout currentStep={3} title="Review & Submit" description="Set learning rate and review your configuration before submitting.">
+    <FlowLayout
+      currentStep={3}
+      title="Review & Submit"
+      description="Set learning rate and review your configuration before submitting."
+    >
       <form className="space-y-5" onSubmit={onSubmit} noValidate>
         <div className="space-y-2">
           <Label htmlFor="learningRate">Learning rate</Label>
@@ -81,7 +99,9 @@ export function Step3Form() {
             step="0.0001"
             {...form.register("learningRate", { valueAsNumber: true })}
           />
-          {learningRateError ? <p className="text-sm text-destructive">{learningRateError}</p> : null}
+          {learningRateError ? (
+            <p className="text-sm text-destructive">{learningRateError}</p>
+          ) : null}
         </div>
 
         <Card className="bg-muted/40">
@@ -99,7 +119,8 @@ export function Step3Form() {
               <span className="text-muted-foreground">Training epochs:</span> {draft.trainingEpochs}
             </p>
             <p>
-              <span className="text-muted-foreground">Evaluation epochs:</span> {draft.evaluationEpochs}
+              <span className="text-muted-foreground">Evaluation epochs:</span>{" "}
+              {draft.evaluationEpochs}
             </p>
             <p>
               <span className="text-muted-foreground">Warm-up epochs:</span> {draft.warmupEpochs}

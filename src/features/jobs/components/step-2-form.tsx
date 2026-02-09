@@ -48,14 +48,25 @@ export function Step2Form() {
       ? form.formState.errors.evaluationEpochs.message
       : null;
   const warmupError =
-    typeof form.formState.errors.warmupEpochs?.message === "string" ? form.formState.errors.warmupEpochs.message : null;
+    typeof form.formState.errors.warmupEpochs?.message === "string"
+      ? form.formState.errors.warmupEpochs.message
+      : null;
 
   return (
-    <FlowLayout currentStep={2} title="Training Configuration" description="Set epoch values for training, evaluation, and warm-up.">
+    <FlowLayout
+      currentStep={2}
+      title="Training Configuration"
+      description="Set epoch values for training, evaluation, and warm-up."
+    >
       <form className="space-y-5" onSubmit={onSubmit} noValidate>
         <div className="space-y-2">
           <Label htmlFor="trainingEpochs">Training epochs</Label>
-          <Input id="trainingEpochs" type="number" min={1} {...form.register("trainingEpochs", { valueAsNumber: true })} />
+          <Input
+            id="trainingEpochs"
+            type="number"
+            min={1}
+            {...form.register("trainingEpochs", { valueAsNumber: true })}
+          />
           {trainingError ? <p className="text-sm text-destructive">{trainingError}</p> : null}
         </div>
 
@@ -72,7 +83,12 @@ export function Step2Form() {
 
         <div className="space-y-2">
           <Label htmlFor="warmupEpochs">Warm-up epochs</Label>
-          <Input id="warmupEpochs" type="number" min={0} {...form.register("warmupEpochs", { valueAsNumber: true })} />
+          <Input
+            id="warmupEpochs"
+            type="number"
+            min={0}
+            {...form.register("warmupEpochs", { valueAsNumber: true })}
+          />
           {warmupError ? <p className="text-sm text-destructive">{warmupError}</p> : null}
         </div>
 

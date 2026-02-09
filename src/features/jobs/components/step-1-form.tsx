@@ -35,12 +35,20 @@ export function Step1Form() {
   });
 
   const jobNameError =
-    typeof form.formState.errors.jobName?.message === "string" ? form.formState.errors.jobName.message : null;
+    typeof form.formState.errors.jobName?.message === "string"
+      ? form.formState.errors.jobName.message
+      : null;
   const baseModelError =
-    typeof form.formState.errors.baseModelId?.message === "string" ? form.formState.errors.baseModelId.message : null;
+    typeof form.formState.errors.baseModelId?.message === "string"
+      ? form.formState.errors.baseModelId.message
+      : null;
 
   return (
-    <FlowLayout currentStep={1} title="Create Fine-Tuning Job" description="Start by naming your job and selecting a base model.">
+    <FlowLayout
+      currentStep={1}
+      title="Create Fine-Tuning Job"
+      description="Start by naming your job and selecting a base model."
+    >
       <form className="space-y-5" onSubmit={onSubmit} noValidate>
         <div className="space-y-2">
           <Label htmlFor="jobName">Job name</Label>
@@ -68,7 +76,9 @@ export function Step1Form() {
               Loading models...
             </p>
           ) : null}
-          {modelsQuery.isError ? <p className="text-sm text-destructive">Unable to load models.</p> : null}
+          {modelsQuery.isError ? (
+            <p className="text-sm text-destructive">Unable to load models.</p>
+          ) : null}
           {baseModelError ? <p className="text-sm text-destructive">{baseModelError}</p> : null}
         </div>
 

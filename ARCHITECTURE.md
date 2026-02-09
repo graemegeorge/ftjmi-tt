@@ -107,3 +107,9 @@ This avoids default-store ambiguity and keeps global state deterministic.
 
 - Introduce shared form field components for richer consistency.
 - Add stronger OpenAPI-derived types once schema generation is introduced.
+
+## Developer Tooling
+
+- Prettier is the source of truth for code formatting via `.prettierrc.json`.
+- Run `npm run format` to apply formatting and `npm run format:check` to verify consistency.
+- `.editorconfig` mirrors core whitespace/newline rules for editor alignment.

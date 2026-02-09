@@ -1,6 +1,7 @@
 import { CreateJobPayload, JobStatus, JobsResponse, ModelOption } from "@/lib/types/jobs";
 
-const API_BASE_URL = process.env.FINE_TUNE_API_BASE_URL || "https://fe-test-api-production-cb39.up.railway.app";
+const API_BASE_URL =
+  process.env.FINE_TUNE_API_BASE_URL || "https://fe-test-api-production-cb39.up.railway.app";
 
 function normalizeStatus(value: unknown): JobStatus {
   const status = String(value ?? "").toLowerCase();
@@ -94,7 +95,9 @@ export async function fetchJobs(): Promise<JobsResponse> {
     .filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null)
     .map((item, index) => normalizeJob(item, index));
 
-  const summaryFromApi = (payload as Record<string, unknown>)?.summary as Record<string, unknown> | undefined;
+  const summaryFromApi = (payload as Record<string, unknown>)?.summary as
+    | Record<string, unknown>
+    | undefined;
   const derived = deriveSummary(jobs.map((job) => job.status));
 
   return {

@@ -55,6 +55,8 @@ npm run build
 npm run start
 npm run lint
 npm run typecheck
+npm run format
+npm run format:check
 ```
 
 ## Implementation Notes

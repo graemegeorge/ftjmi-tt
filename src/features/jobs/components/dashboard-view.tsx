@@ -37,7 +37,9 @@ export function DashboardView() {
         </>
       ) : (
         <Card>
-          <CardContent className="py-16 text-center text-sm text-muted-foreground">No data available.</CardContent>
+          <CardContent className="py-16 text-center text-sm text-muted-foreground">
+            No data available.
+          </CardContent>
         </Card>
       )}
     </div>

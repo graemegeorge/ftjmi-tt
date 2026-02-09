@@ -10,7 +10,11 @@ export type FineTuneDraft = Partial<FineTuneValues>;
 const storage = createJSONStorage<FineTuneDraft>(() => localStorage);
 const initialDraft: FineTuneDraft = {};
 
-export const fineTuneDraftAtom = atomWithStorage<FineTuneDraft>("fine-tune-draft", initialDraft, storage);
+export const fineTuneDraftAtom = atomWithStorage<FineTuneDraft>(
+  "fine-tune-draft",
+  initialDraft,
+  storage
+);
 
 export const setDraftAtom = atom(null, (get, set, payload: FineTuneDraft) => {
   set(fineTuneDraftAtom, { ...get(fineTuneDraftAtom), ...payload });

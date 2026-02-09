@@ -17,7 +17,11 @@ const epochsShape = {
 
 const withEpochGuards = <T extends z.ZodTypeAny>(schema: T) =>
   schema.superRefine((data: z.infer<T>, ctx: z.RefinementCtx) => {
-    const epochs = data as { trainingEpochs: number; evaluationEpochs: number; warmupEpochs: number };
+    const epochs = data as {
+      trainingEpochs: number;
+      evaluationEpochs: number;
+      warmupEpochs: number;
+    };
     if (epochs.evaluationEpochs > epochs.trainingEpochs) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -38,8 +42,7 @@ const withEpochGuards = <T extends z.ZodTypeAny>(schema: T) =>
 export const step2Schema = withEpochGuards(z.object(epochsShape));
 
 export const step3Schema = z.object({
-  learningRate: z
-    .coerce
+  learningRate: z.coerce
     .number()
     .gt(0, "Learning rate must be greater than 0")
     .max(1, "Learning rate must not exceed 1")
