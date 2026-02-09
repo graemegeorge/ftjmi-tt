@@ -143,6 +143,19 @@ export async function createJob(payload: CreateJobPayload): Promise<unknown> {
 
   return response.json();
 }
+
+export async function deleteJob(jobId: string): Promise<unknown> {
+  const response = await externalFetch(`/api/jobs/${encodeURIComponent(jobId)}`, {
+    method: "DELETE"
+  });
+
+  if (response.status === 204) {
+    return null;
+  }
+
+  return response.json();
+}
+
 export class ExternalApiError extends Error {
   status: number;
   payload: unknown;
