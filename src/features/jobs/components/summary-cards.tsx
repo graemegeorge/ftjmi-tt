@@ -13,7 +13,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           <CardTitle className="text-sm text-muted-foreground">Running</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-semibold text-blue-700">{summary.running}</p>
+          <p className="text-3xl font-semibold text-status-info">{summary.running}</p>
         </CardContent>
       </Card>
       <Card>
@@ -21,7 +21,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           <CardTitle className="text-sm text-muted-foreground">Completed</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-semibold text-emerald-700">{summary.completed}</p>
+          <p className="text-3xl font-semibold text-status-success">{summary.completed}</p>
         </CardContent>
       </Card>
       <Card>
@@ -29,7 +29,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           <CardTitle className="text-sm text-muted-foreground">Failed</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-semibold text-red-700">{summary.failed}</p>
+          <p className="text-3xl font-semibold text-status-danger">{summary.failed}</p>
         </CardContent>
       </Card>
     </section>
