@@ -14,7 +14,7 @@ Next.js App Router app for creating and monitoring AI fine-tuning jobs.
 ## Tech Stack
 
 - Next.js (App Router) + TypeScript
-- Tailwind CSS
+- Tailwind CSS v4 (CSS-first tokens)
 - TanStack Query
 - React Hook Form + Zod
 - Jotai (`atomWithStorage`)
@@ -64,3 +64,17 @@ npm run format:check
 - External API shape normalization + payload mapping lives in `src/lib/api/server.ts`.
 - Internal API routes are under `src/app/api/*`.
 - Dashboard delete action uses internal `DELETE /api/jobs/[id]` and confirms with shadcn `AlertDialog`, so API keys stay server-side.
+
+## Design Tokens
+
+Token layers live in `src/app/globals.css`:
+
+- `--ref-*`: primitive design reference values (raw colors, radii, shadows)
+- `--sys-*`: semantic runtime tokens used by the app theme
+- `@theme inline`: Tailwind utility exports and compatibility aliases
+
+Core exported utilities include:
+
+- Compatibility aliases: `background`, `foreground`, `card`, `muted`, `border`, `input`, `primary`, `destructive`, `destructive-foreground`
+- Semantic status colors: `status-success|info|danger` and `status-*-bg`
+- Shape/elevation: `rounded-chip|card|panel`, `shadow-panel|floating`

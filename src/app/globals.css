@@ -1,24 +1,124 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
-  --background: 215 28% 97%;
-  --foreground: 223 30% 14%;
-  --card: 0 0% 100%;
-  --card-foreground: 223 30% 14%;
-  --primary: 219 74% 51%;
-  --primary-foreground: 210 40% 98%;
-  --muted: 216 29% 92%;
-  --muted-foreground: 218 15% 38%;
-  --border: 220 22% 84%;
-  --destructive: 0 72% 48%;
+  /* Primitive tokens (raw design references) */
+  --ref-color-white: 255 255 255;
+  --ref-color-black: 15 18 24;
+  --ref-color-slate-50: 248 249 250;
+  --ref-color-slate-100: 241 243 245;
+  --ref-color-slate-200: 233 236 239;
+  --ref-color-slate-300: 222 226 230;
+  --ref-color-slate-500: 108 117 125;
+  --ref-color-red-700: 185 28 28;
+  --ref-color-red-100: 254 226 226;
+  --ref-color-green-700: 20 138 74;
+  --ref-color-green-100: 213 245 226;
+  --ref-color-blue-700: 37 99 235;
+  --ref-color-blue-100: 222 236 255;
+
+  --ref-radius-sm: 0.5rem;
+  --ref-radius-md: 0.75rem;
+  --ref-radius-lg: 1rem;
+
+  --ref-shadow-panel: 0 1px 1px rgb(15 23 42 / 0.04), 0 8px 24px -20px rgb(15 23 42 / 0.35);
+  --ref-shadow-floating: 0 12px 36px -24px rgb(15 23 42 / 0.5);
+
+  /* Semantic runtime tokens (light theme) */
+  --sys-bg-canvas: var(--ref-color-slate-100);
+  --sys-bg-card: var(--ref-color-white);
+  --sys-bg-muted: var(--ref-color-slate-200);
+  --sys-bg-overlay: 0 0 0;
+
+  --sys-text-primary: 34 40 49;
+  --sys-text-muted: var(--ref-color-slate-500);
+  --sys-text-inverse: var(--ref-color-white);
+
+  --sys-border-default: var(--ref-color-slate-300);
+  --sys-border-strong: var(--ref-color-slate-300);
+
+  --sys-action-primary: var(--ref-color-black);
+  --sys-action-primary-foreground: var(--ref-color-white);
+
+  --sys-status-danger: var(--ref-color-red-700);
+  --sys-status-danger-bg: var(--ref-color-red-100);
+  --sys-status-success: var(--ref-color-green-700);
+  --sys-status-success-bg: var(--ref-color-green-100);
+  --sys-status-info: var(--ref-color-blue-700);
+  --sys-status-info-bg: var(--ref-color-blue-100);
+
+  --sys-radius-chip: var(--ref-radius-sm);
+  --sys-radius-card: var(--ref-radius-md);
+  --sys-radius-panel: var(--ref-radius-lg);
+
+  --sys-shadow-panel: var(--ref-shadow-panel);
+  --sys-shadow-floating: var(--ref-shadow-floating);
 }
 
-* {
-  @apply border-border;
+/* Dark-ready scaffolding (not enabled by default) */
+.dark {
+  --sys-bg-canvas: 17 20 24;
+  --sys-bg-card: 24 28 34;
+  --sys-bg-muted: 34 39 46;
+  --sys-bg-overlay: 0 0 0;
+
+  --sys-text-primary: 237 241 246;
+  --sys-text-muted: 162 173 188;
+  --sys-text-inverse: 15 18 24;
+
+  --sys-border-default: 64 72 83;
+  --sys-border-strong: 83 93 107;
+
+  --sys-action-primary: 237 241 246;
+  --sys-action-primary-foreground: 15 18 24;
+
+  --sys-status-danger: 248 113 113;
+  --sys-status-danger-bg: 69 24 24;
+  --sys-status-success: 74 222 128;
+  --sys-status-success-bg: 20 52 34;
+  --sys-status-info: 96 165 250;
+  --sys-status-info-bg: 30 58 99;
+}
+
+@theme inline {
+  /* Compatibility aliases */
+  --color-background: rgb(var(--sys-bg-canvas));
+  --color-foreground: rgb(var(--sys-text-primary));
+  --color-card: rgb(var(--sys-bg-card));
+  --color-card-foreground: rgb(var(--sys-text-primary));
+  --color-primary: rgb(var(--sys-action-primary));
+  --color-primary-foreground: rgb(var(--sys-action-primary-foreground));
+  --color-muted: rgb(var(--sys-bg-muted));
+  --color-muted-foreground: rgb(var(--sys-text-muted));
+  --color-border: rgb(var(--sys-border-default));
+  --color-input: rgb(var(--sys-border-strong));
+  --color-destructive: rgb(var(--sys-status-danger));
+  --color-destructive-foreground: rgb(var(--sys-text-inverse));
+
+  /* Semantic token surface */
+  --color-status-success: rgb(var(--sys-status-success));
+  --color-status-success-bg: rgb(var(--sys-status-success-bg));
+  --color-status-info: rgb(var(--sys-status-info));
+  --color-status-info-bg: rgb(var(--sys-status-info-bg));
+  --color-status-danger: rgb(var(--sys-status-danger));
+  --color-status-danger-bg: rgb(var(--sys-status-danger-bg));
+
+  --radius-chip: var(--sys-radius-chip);
+  --radius-card: var(--sys-radius-card);
+  --radius-panel: var(--sys-radius-panel);
+
+  --shadow-panel: var(--sys-shadow-panel);
+  --shadow-floating: var(--sys-shadow-floating);
+}
+
+*,
+*::before,
+*::after {
+  border-color: rgb(var(--sys-border-default));
 }
 
 body {
-  @apply bg-background text-foreground antialiased;
+  background-color: rgb(var(--sys-bg-canvas));
+  color: rgb(var(--sys-text-primary));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

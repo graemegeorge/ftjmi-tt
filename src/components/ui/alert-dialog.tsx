@@ -34,7 +34,7 @@ const AlertDialogContent = React.forwardRef<
     <AlertDialogOverlay />
     <AlertDialogPrimitive.Content
       className={cn(
-        "fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        "fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-card border bg-background p-6 shadow-floating duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         className
       )}
       {...props}
@@ -85,11 +85,11 @@ const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
 >(({ className, ...props }, ref) => (
-  <AlertDialogPrimitive.Action
-    className={cn(
-      "inline-flex h-10 items-center justify-center rounded-lg bg-destructive px-4 text-sm font-semibold text-destructive-foreground transition-colors hover:opacity-90 disabled:pointer-events-none disabled:opacity-50",
-      className
-    )}
+    <AlertDialogPrimitive.Action
+      className={cn(
+        "inline-flex h-10 items-center justify-center rounded-chip bg-destructive px-4 text-sm font-semibold text-destructive-foreground transition-colors hover:opacity-90 disabled:pointer-events-none disabled:opacity-50",
+        className
+      )}
     {...props}
     ref={ref}
   />
@@ -100,11 +100,11 @@ const AlertDialogCancel = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>
 >(({ className, ...props }, ref) => (
-  <AlertDialogPrimitive.Cancel
-    className={cn(
-      "inline-flex h-10 items-center justify-center rounded-lg border border-input bg-background px-4 text-sm font-semibold transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50",
-      className
-    )}
+    <AlertDialogPrimitive.Cancel
+      className={cn(
+        "inline-flex h-10 items-center justify-center rounded-chip border border-input bg-background px-4 text-sm font-semibold transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50",
+        className
+      )}
     {...props}
     ref={ref}
   />

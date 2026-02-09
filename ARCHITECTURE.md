@@ -98,6 +98,16 @@ Root layout wraps app with `AppProviders`:
 
 This avoids default-store ambiguity and keeps global state deterministic.
 
+## Styling Tokens
+
+The styling layer uses Tailwind v4 CSS-first tokens in `src/app/globals.css`:
+
+- Primitive references: `--ref-*`
+- Semantic runtime tokens: `--sys-*`
+- Tailwind exports: `@theme inline`
+
+Compatibility alias tokens preserve shadcn-style utility names (`background`, `foreground`, `card`, `muted`, `border`, `input`, `destructive-foreground`) while semantic utilities add status and elevation surfaces (`status-*`, `status-*-bg`, `rounded-chip/card/panel`, `shadow-panel/floating`).
+
 ## Non-Goals (Current MVP)
 
 - Backend/database draft persistence

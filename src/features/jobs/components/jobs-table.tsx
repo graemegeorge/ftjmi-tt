@@ -65,7 +65,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
       </CardHeader>
       <CardContent>
         {jobs.length === 0 ? (
-          <div className="rounded-lg border border-dashed px-5 py-12 text-center text-sm text-muted-foreground">
+          <div className="rounded-card border border-dashed px-5 py-12 text-center text-sm text-muted-foreground">
             No jobs yet. Start by creating your first fine-tuning job.
           </div>
         ) : (
