@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import type { ReactNode } from "react";
 
-import { QueryProvider } from "@/providers/query-provider";
+import { AppProviders } from "@/providers/app-providers";
 
 import "./globals.css";
 
@@ -15,10 +15,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="font-sans">
-        <QueryProvider>
+        <AppProviders>
           {children}
           <Toaster richColors position="top-right" />
-        </QueryProvider>
+        </AppProviders>
       </body>
     </html>
   );

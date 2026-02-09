@@ -40,12 +40,12 @@ function deriveSummary(statuses: JobStatus[]) {
 
 function mapCreatePayload(payload: CreateJobPayload) {
   return {
-    job_name: payload.jobName,
-    base_model: payload.baseModelId,
-    training_epochs: payload.trainingEpochs,
-    evaluation_epochs: payload.evaluationEpochs,
-    warmup_epochs: payload.warmupEpochs,
-    learning_rate: payload.learningRate
+    name: payload.jobName,
+    baseModel: payload.baseModelId,
+    epochs: payload.trainingEpochs,
+    evaluationEpochs: payload.evaluationEpochs,
+    warmupEpochs: payload.warmupEpochs,
+    learningRate: payload.learningRate
   };
 }
 
@@ -66,7 +66,15 @@ async function externalFetch(path: string, init: RequestInit = {}) {
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`External API error: ${response.status} ${text}`);
+    const payload = (() => {
+      try {
+        return JSON.parse(text);
+      } catch {
+        return { error: text || "Unknown API error" };
+      }
+    })();
+
+    throw new ExternalApiError(response.status, payload);
   }
 
   return response;
@@ -134,4 +142,15 @@ export async function createJob(payload: CreateJobPayload): Promise<unknown> {
   });
 
   return response.json();
+}
+export class ExternalApiError extends Error {
+  status: number;
+  payload: unknown;
+
+  constructor(status: number, payload: unknown) {
+    super(`External API error: ${status}`);
+    this.name = "ExternalApiError";
+    this.status = status;
+    this.payload = payload;
+  }
 }

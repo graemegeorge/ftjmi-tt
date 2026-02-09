@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { fineTuneSchema } from "@/lib/schemas/fineTune";
-import { createJob, fetchJobs } from "@/lib/api/server";
+import { createJob, ExternalApiError, fetchJobs } from "@/lib/api/server";
 
 export async function GET() {
   try {
@@ -22,6 +22,10 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof Error && error.name === "ZodError") {
       return NextResponse.json({ message: error.message }, { status: 400 });
+    }
+
+    if (error instanceof ExternalApiError) {
+      return NextResponse.json(error.payload, { status: error.status });
     }
 
     const message = error instanceof Error ? error.message : "Unable to create job";
