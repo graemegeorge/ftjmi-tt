@@ -2,29 +2,33 @@
 
 Next.js App Router app for creating and monitoring AI fine-tuning jobs.
 
-## Tech stack
+## What It Includes
+
+- Dashboard with status summary (running/completed/failed) and job table
+- 3-step fine-tuning job creation flow
+- Centralized Zod validation with interdependent epoch rules
+- Persisted multi-step draft state across navigation + refresh
+- Server-side API proxy with `x-api-key` kept off the client
+
+## Tech Stack
 
 - Next.js (App Router) + TypeScript
-- Tailwind CSS + shadcn-style UI primitives
-- TanStack Query (server state)
-- React Hook Form + Zod (single validation source)
-- Jotai (`atomWithStorage`) for multi-step form persistence
+- Tailwind CSS
+- TanStack Query
+- React Hook Form + Zod
+- Jotai (`atomWithStorage`)
 
-## Features
+## Project Docs
 
-- Dashboard with:
-  - Summary stats (running/completed/failed)
-  - Job table with statuses
-- 3-step create flow across routes:
-  - Step 1: job name + base model
-  - Step 2: epoch config with interdependent validation
-  - Step 3: learning rate + review + submit
-- Draft persistence:
-  - Survives route navigation and browser refresh
-  - Resets when starting a new job from dashboard
-- Server-side API proxy:
-  - Calls external API from Next route handlers
-  - `x-api-key` never exposed to browser code
+- Agent workflow: `AGENTS.md`
+- Architecture and data flow: `ARCHITECTURE.md`
+
+## Routes
+
+- `/` Dashboard
+- `/jobs/new/step-1` Create flow step 1
+- `/jobs/new/step-2` Create flow step 2
+- `/jobs/new/step-3` Create flow step 3
 
 ## Environment
 
@@ -48,11 +52,12 @@ npm run dev
 npm run dev
 npm run build
 npm run start
+npm run lint
 npm run typecheck
 ```
 
-## Notes
+## Implementation Notes
 
-- External API response shape is normalized in `/src/lib/api/server.ts`.
-- Optional job deletion is intentionally out of MVP scope.
-- Figma MCP parity pass is pending network/MCP availability in this environment.
+- External API shape normalization + payload mapping lives in `src/lib/api/server.ts`.
+- Internal API routes are under `src/app/api/*`.
+- Optional delete-job functionality is intentionally out of MVP scope.
