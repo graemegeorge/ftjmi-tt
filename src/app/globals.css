@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f7fafc 0%, #eef2f7 100%);
+  color: #0f172a;
+  font-family: "Work Sans", "Segoe UI", sans-serif;
+}
