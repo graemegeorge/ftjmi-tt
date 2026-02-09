@@ -4,6 +4,16 @@ import { useState } from "react";
 import { LoaderCircle, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,16 +34,16 @@ function formatDate(value: string) {
 export function JobsTable({ jobs }: JobsTableProps) {
   const deleteJobMutation = useDeleteJobMutation();
   const [deletingJobId, setDeletingJobId] = useState<string | null>(null);
+  const [jobPendingDelete, setJobPendingDelete] = useState<FineTuneJob | null>(null);
 
-  async function handleDelete(job: FineTuneJob) {
-    const confirmed = window.confirm(`Are you sure you want to delete "${job.name}"? This action cannot be undone.`);
-    if (!confirmed) return;
-
-    setDeletingJobId(job.id);
+  async function confirmDelete() {
+    if (!jobPendingDelete) return;
+    setDeletingJobId(jobPendingDelete.id);
 
     try {
-      await deleteJobMutation.mutateAsync(job.id);
-      toast.success(`Deleted job "${job.name}"`);
+      await deleteJobMutation.mutateAsync(jobPendingDelete.id);
+      toast.success(`Deleted job "${jobPendingDelete.name}"`);
+      setJobPendingDelete(null);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to delete job");
     } finally {
@@ -78,7 +88,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
                       aria-label={`Delete ${job.name}`}
                       className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
                       disabled={deletingJobId === job.id}
-                      onClick={() => handleDelete(job)}
+                      onClick={() => setJobPendingDelete(job)}
                       size="sm"
                       title="Delete job"
                       variant="ghost"
@@ -96,6 +106,24 @@ export function JobsTable({ jobs }: JobsTableProps) {
           </Table>
         )}
       </CardContent>
+      <AlertDialog open={Boolean(jobPendingDelete)} onOpenChange={(open) => !open && setJobPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete job?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {jobPendingDelete
+                ? `Are you sure you want to delete "${jobPendingDelete.name}"? This action cannot be undone.`
+                : "This action cannot be undone."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={Boolean(deletingJobId)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction disabled={Boolean(deletingJobId)} onClick={confirmDelete}>
+              {deletingJobId ? <LoaderCircle className="h-4 w-4 animate-spin" /> : "Delete job"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }

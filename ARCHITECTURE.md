@@ -51,7 +51,7 @@ High-level layers:
 
 ### Delete Job (write path)
 
-1. User clicks delete icon in `JobsTable` and confirms native prompt.
+1. User clicks delete icon in `JobsTable` and confirms in shadcn `AlertDialog`.
 2. Table triggers `useDeleteJobMutation()`.
 3. Mutation calls internal `DELETE /api/jobs/[id]`.
 4. Route forwards request through `deleteJob()` in `src/lib/api/server.ts`.

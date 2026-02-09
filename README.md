@@ -5,7 +5,7 @@ Next.js App Router app for creating and monitoring AI fine-tuning jobs.
 ## What It Includes
 
 - Dashboard with status summary (running/completed/failed) and job table
-- Job deletion from the dashboard table with confirmation prompt
+- Job deletion from the dashboard table with shadcn `AlertDialog` confirmation
 - 3-step fine-tuning job creation flow
 - Centralized Zod validation with interdependent epoch rules
 - Persisted multi-step draft state across navigation + refresh
@@ -61,4 +61,4 @@ npm run typecheck
 
 - External API shape normalization + payload mapping lives in `src/lib/api/server.ts`.
 - Internal API routes are under `src/app/api/*`.
-- Dashboard delete action uses internal `DELETE /api/jobs/[id]` so API keys stay server-side.
+- Dashboard delete action uses internal `DELETE /api/jobs/[id]` and confirms with shadcn `AlertDialog`, so API keys stay server-side.
