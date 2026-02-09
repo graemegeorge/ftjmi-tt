@@ -1,22 +1,38 @@
 import { fineTuneSchema } from "@/lib/schemas/fineTune";
 import type { CreateJobPayload, JobsResponse, ModelOption } from "@/lib/types/jobs";
 
-async function parseJson<T>(response: Response): Promise<T> {
+async function parseResponse<T>(response: Response): Promise<T> {
+  const text = await response.text();
+
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: "Request failed" }));
+    const error = (() => {
+      if (!text) return { message: "Request failed" };
+
+      try {
+        return JSON.parse(text) as { message?: string };
+      } catch {
+        return { message: text };
+      }
+    })();
+
     throw new Error(error.message || "Request failed");
   }
-  return response.json() as Promise<T>;
+
+  if (!text || response.status === 204) {
+    return null as T;
+  }
+
+  return JSON.parse(text) as T;
 }
 
 export async function getJobs() {
   const response = await fetch("/api/jobs", { cache: "no-store" });
-  return parseJson<JobsResponse>(response);
+  return parseResponse<JobsResponse>(response);
 }
 
 export async function getModels() {
   const response = await fetch("/api/models", { cache: "no-store" });
-  return parseJson<ModelOption[]>(response);
+  return parseResponse<ModelOption[]>(response);
 }
 
 export async function postJob(payload: CreateJobPayload) {
@@ -29,5 +45,13 @@ export async function postJob(payload: CreateJobPayload) {
     body: JSON.stringify(validated)
   });
 
-  return parseJson<unknown>(response);
+  return parseResponse<unknown>(response);
+}
+
+export async function deleteJob(jobId: string) {
+  const response = await fetch(`/api/jobs/${encodeURIComponent(jobId)}`, {
+    method: "DELETE"
+  });
+
+  return parseResponse<unknown>(response);
 }

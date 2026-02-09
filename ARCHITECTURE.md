@@ -49,6 +49,14 @@ High-level layers:
 6. Route validates with `fineTuneSchema`, maps payload for API contract, forwards to external API.
 7. On success, jobs query invalidates and draft resets.
 
+### Delete Job (write path)
+
+1. User clicks delete icon in `JobsTable` and confirms native prompt.
+2. Table triggers `useDeleteJobMutation()`.
+3. Mutation calls internal `DELETE /api/jobs/[id]`.
+4. Route forwards request through `deleteJob()` in `src/lib/api/server.ts`.
+5. On success, jobs query invalidates and dashboard refreshes.
+
 ## State Management
 
 - Store: Jotai with explicit root provider store in `src/providers/app-providers.tsx`.
@@ -92,12 +100,10 @@ This avoids default-store ambiguity and keeps global state deterministic.
 
 ## Non-Goals (Current MVP)
 
-- Job deletion UI and endpoint integration
 - Backend/database draft persistence
 - Charts/advanced analytics visualization
 
 ## Extension Points
 
-- Add optional delete flow via `DELETE /api/jobs` in route + query invalidation.
 - Introduce shared form field components for richer consistency.
 - Add stronger OpenAPI-derived types once schema generation is introduced.

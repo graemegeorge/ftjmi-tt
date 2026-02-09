@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getJobs, getModels, postJob } from "@/lib/api/client";
+import { deleteJob, getJobs, getModels, postJob } from "@/lib/api/client";
 import type { CreateJobPayload } from "@/lib/types/jobs";
 
 export const JOBS_QUERY_KEY = ["jobs"] as const;
@@ -27,6 +27,17 @@ export function useCreateJobMutation() {
 
   return useMutation({
     mutationFn: (payload: CreateJobPayload) => postJob(payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: JOBS_QUERY_KEY });
+    }
+  });
+}
+
+export function useDeleteJobMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (jobId: string) => deleteJob(jobId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: JOBS_QUERY_KEY });
     }
