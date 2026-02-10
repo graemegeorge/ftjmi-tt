@@ -37,8 +37,8 @@ export function DashboardView() {
           </CardContent>
         </Card>
       ) : data ? (
-        <div className="flex gap-4 flex-col lg:flex-row">
-          <Card className="flex-1">
+        <div className="flex flex-col gap-4 lg:flex-row">
+          <Card className="lg:flex-1">
             <CardHeader>
               <CardTitle>Fine-tuning usage</CardTitle>
               <CardDescription>Current status and recent fine-tuning jobs.</CardDescription>
@@ -53,13 +53,13 @@ export function DashboardView() {
             </CardContent>
           </Card>
 
-          <Card className="flex-1">
+          <Card className="lg:flex-1">
             <CardHeader>
               <CardTitle>Get Started</CardTitle>
             </CardHeader>
 
             <CardContent>
-              <Card orientation="horizontal" className="flex-1">
+              <Card orientation="horizontal" className="overflow-visible sm:overflow-hidden">
                 <CardHeader bg="muted" className="items-center justify-center border-r p-6">
                   <div className="rounded-3xl p-6">
                     <Wrench
@@ -69,7 +69,7 @@ export function DashboardView() {
                   </div>
                 </CardHeader>
 
-                <CardContent className="flex flex-1 flex-col justify-center gap-4 p-6 sm:p-8">
+                <CardContent className="flex flex-1 flex-col gap-4 p-6 sm:justify-center sm:p-8">
                   <CardHeader className="space-y-2 p-0">
                     <CardTitle>Get started with Fine-tuning</CardTitle>
                     <CardDescription>

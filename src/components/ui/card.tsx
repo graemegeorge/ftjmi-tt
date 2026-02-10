@@ -15,7 +15,7 @@ export function Card({ className, orientation = "vertical", raised = true, ...pr
       className={cn(
         "rounded-card border bg-card text-card-foreground overflow-hidden",
         raised && "shadow-panel",
-        orientation === "horizontal" ? "flex flex-row items-stretch" : "flex flex-col",
+        orientation === "horizontal" ? "flex flex-col sm:flex-row items-stretch" : "flex flex-col",
         className
       )}
       {...props}

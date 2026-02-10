@@ -100,14 +100,14 @@ export function JobsTable({ jobs }: JobsTableProps) {
         <Table className="table-fixed">
           <colgroup>
             <col />
-            <col className="w-32" />
+            <col className="w-32 hidden sm:table-column" />
             <col className="w-30" />
             <col className="w-15" />
           </colgroup>
           <TableHeader>
             <TableRow>
               <TableHead>Job ID</TableHead>
-              <TableHead>Date</TableHead>
+              <TableHead className="hidden sm:table-cell">Date</TableHead>
               <TableHead className="text-right">Status</TableHead>
               <TableHead></TableHead>
             </TableRow>
@@ -128,7 +128,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
                     />
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="hidden sm:table-cell">
                   <div className="space-y-0.5">
                     <p className="text-sm">{formatDate(job.createdAt)}</p>
                     <p className="text-xs text-muted-foreground">{formatTimeAgo(job.createdAt)}</p>
