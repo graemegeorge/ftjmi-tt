@@ -33,12 +33,14 @@ const withEpochGuards = <T extends z.ZodTypeAny>(schema: T) =>
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["evaluationEpochs"],
-        message: "Evaluation epochs must be less than or equal to training epochs minus warm-up epochs"
+        message:
+          "Evaluation epochs must be less than or equal to training epochs minus warm-up epochs"
       });
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["warmupEpochs"],
-        message: "Warm-up epochs must be less than or equal to training epochs minus evaluation epochs"
+        message:
+          "Warm-up epochs must be less than or equal to training epochs minus evaluation epochs"
       });
     }
   });

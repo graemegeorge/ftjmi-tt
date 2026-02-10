@@ -25,7 +25,9 @@ describe("/api/models route handlers", () => {
   });
 
   it("passes through external errors for GET", async () => {
-    vi.mocked(serverApi.fetchModels).mockRejectedValue(new ExternalApiError(401, { error: "unauthorized" }));
+    vi.mocked(serverApi.fetchModels).mockRejectedValue(
+      new ExternalApiError(401, { error: "unauthorized" })
+    );
 
     const response = await GET();
 
@@ -33,4 +35,3 @@ describe("/api/models route handlers", () => {
     await expect(response.json()).resolves.toEqual({ error: "unauthorized" });
   });
 });
-

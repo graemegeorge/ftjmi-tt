@@ -37,7 +37,9 @@ describe("/api/jobs/[id] route handlers", () => {
   });
 
   it("passes through external errors", async () => {
-    vi.mocked(serverApi.deleteJob).mockRejectedValue(new ExternalApiError(503, { error: "downstream" }));
+    vi.mocked(serverApi.deleteJob).mockRejectedValue(
+      new ExternalApiError(503, { error: "downstream" })
+    );
 
     const response = await DELETE(new Request("http://localhost/api/jobs/job-1"), {
       params: Promise.resolve({ id: "job-1" })
@@ -47,4 +49,3 @@ describe("/api/jobs/[id] route handlers", () => {
     await expect(response.json()).resolves.toEqual({ error: "downstream" });
   });
 });
-

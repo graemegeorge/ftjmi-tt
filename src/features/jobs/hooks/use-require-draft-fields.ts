@@ -15,14 +15,19 @@ interface UseRequireDraftFieldsOptions {
   disabled?: boolean;
 }
 
-export function useRequireDraftFields({ requiredFields, disabled = false }: UseRequireDraftFieldsOptions) {
+export function useRequireDraftFields({
+  requiredFields,
+  disabled = false
+}: UseRequireDraftFieldsOptions) {
   const router = useRouter();
   const draft = useAtomValue(fineTuneDraftAtom);
 
   useEffect(() => {
     if (disabled) return;
 
-    const missingRequiredField = requiredFields.some((field) => draft[field] === undefined || draft[field] === "");
+    const missingRequiredField = requiredFields.some(
+      (field) => draft[field] === undefined || draft[field] === ""
+    );
 
     if (missingRequiredField) {
       router.replace(APP_ROUTES.jobsNewStep1);

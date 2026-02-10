@@ -9,12 +9,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   raised?: boolean;
 }
 
-export function Card({
-  className,
-  orientation = "vertical",
-  raised = true,
-  ...props
-}: CardProps) {
+export function Card({ className, orientation = "vertical", raised = true, ...props }: CardProps) {
   return (
     <div
       className={cn(

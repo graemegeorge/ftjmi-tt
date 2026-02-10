@@ -39,10 +39,10 @@ export function DashboardView() {
       ) : data ? (
         <div className="flex gap-4 flex-col lg:flex-row">
           <Card className="flex-1">
-              <CardHeader>
-                <CardTitle>Fine-tuning usage</CardTitle>
-                <CardDescription>Current status and recent fine-tuning jobs.</CardDescription>
-              </CardHeader>
+            <CardHeader>
+              <CardTitle>Fine-tuning usage</CardTitle>
+              <CardDescription>Current status and recent fine-tuning jobs.</CardDescription>
+            </CardHeader>
 
             <CardContent>
               <SummaryCard summary={data.summary} />

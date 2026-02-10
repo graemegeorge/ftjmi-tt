@@ -99,7 +99,9 @@ describe("server API adapter", () => {
   });
 
   it("maps create payload to external contract", async () => {
-    const fetchMock = vi.spyOn(global, "fetch").mockResolvedValue(new Response(JSON.stringify({ id: "ok" })));
+    const fetchMock = vi
+      .spyOn(global, "fetch")
+      .mockResolvedValue(new Response(JSON.stringify({ id: "ok" })));
 
     await createJob({
       jobName: "my-job",

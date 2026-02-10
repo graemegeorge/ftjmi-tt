@@ -7,4 +7,3 @@ export function getFieldError<TFieldValues extends FieldValues>(
   const error = errors[name];
   return typeof error?.message === "string" ? error.message : null;
 }
-

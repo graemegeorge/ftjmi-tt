@@ -85,11 +85,11 @@ const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
 >(({ className, ...props }, ref) => (
-    <AlertDialogPrimitive.Action
-      className={cn(
-        "inline-flex h-10 items-center justify-center rounded-chip bg-destructive px-4 text-sm font-semibold text-destructive-foreground transition-colors hover:opacity-90 disabled:pointer-events-none disabled:opacity-50",
-        className
-      )}
+  <AlertDialogPrimitive.Action
+    className={cn(
+      "inline-flex h-10 items-center justify-center rounded-chip bg-destructive px-4 text-sm font-semibold text-destructive-foreground transition-colors hover:opacity-90 disabled:pointer-events-none disabled:opacity-50",
+      className
+    )}
     {...props}
     ref={ref}
   />
@@ -100,11 +100,11 @@ const AlertDialogCancel = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>
 >(({ className, ...props }, ref) => (
-    <AlertDialogPrimitive.Cancel
-      className={cn(
-        "inline-flex h-10 items-center justify-center rounded-chip border border-input bg-background px-4 text-sm font-semibold transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50",
-        className
-      )}
+  <AlertDialogPrimitive.Cancel
+    className={cn(
+      "inline-flex h-10 items-center justify-center rounded-chip border border-input bg-background px-4 text-sm font-semibold transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50",
+      className
+    )}
     {...props}
     ref={ref}
   />

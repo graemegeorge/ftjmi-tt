@@ -32,7 +32,9 @@ describe("/api/jobs route handlers", () => {
   });
 
   it("passes through external errors for GET", async () => {
-    vi.mocked(serverApi.fetchJobs).mockRejectedValue(new ExternalApiError(429, { error: "Rate limit" }));
+    vi.mocked(serverApi.fetchJobs).mockRejectedValue(
+      new ExternalApiError(429, { error: "Rate limit" })
+    );
 
     const response = await GET();
 
@@ -73,7 +75,9 @@ describe("/api/jobs route handlers", () => {
   });
 
   it("passes through external errors for POST", async () => {
-    vi.mocked(serverApi.createJob).mockRejectedValue(new ExternalApiError(503, { error: "unavailable" }));
+    vi.mocked(serverApi.createJob).mockRejectedValue(
+      new ExternalApiError(503, { error: "unavailable" })
+    );
 
     const request = new Request("http://localhost/api/jobs", {
       method: "POST",
@@ -93,4 +97,3 @@ describe("/api/jobs route handlers", () => {
     await expect(response.json()).resolves.toEqual({ error: "unavailable" });
   });
 });
-
