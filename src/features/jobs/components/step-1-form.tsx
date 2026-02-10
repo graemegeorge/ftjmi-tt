@@ -10,10 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useModelsQuery } from "@/features/jobs/hooks";
+import { getFieldError } from "@/lib/forms";
+import { APP_ROUTES } from "@/lib/constants/routes";
 import { step1Schema, type Step1Values } from "@/lib/schemas/fineTune";
 import { fineTuneDraftAtom, setDraftAtom } from "@/lib/state/fineTuneDraft";
 
 import { FlowLayout } from "./flow-layout";
+import { InputDescription } from "@/components/ui/input-description";
 
 export function Step1Form() {
   const router = useRouter();
@@ -31,17 +34,11 @@ export function Step1Form() {
 
   const onSubmit = form.handleSubmit((values) => {
     setDraft(values);
-    router.push("/jobs/new/step-2");
+    router.push(APP_ROUTES.jobsNewStep2);
   });
 
-  const jobNameError =
-    typeof form.formState.errors.jobName?.message === "string"
-      ? form.formState.errors.jobName.message
-      : null;
-  const baseModelError =
-    typeof form.formState.errors.baseModelId?.message === "string"
-      ? form.formState.errors.baseModelId.message
-      : null;
+  const jobNameError = getFieldError(form.formState.errors, "jobName");
+  const baseModelError = getFieldError(form.formState.errors, "baseModelId");
 
   return (
     <FlowLayout
@@ -52,7 +49,15 @@ export function Step1Form() {
       <form className="space-y-5" onSubmit={onSubmit} noValidate>
         <div className="space-y-2">
           <Label htmlFor="jobName">Job name</Label>
-          <Input id="jobName" placeholder="my-finetune-job" {...form.register("jobName")} />
+          <Input
+            id="jobName"
+            placeholder="my-finetune-job"
+            className="w-full sm:w-1/2"
+            {...form.register("jobName")}
+          />
+          <InputDescription>
+            Can only contain lowercase alphanumeric characters and dashes.
+          </InputDescription>
           {jobNameError ? <p className="text-sm text-destructive">{jobNameError}</p> : null}
         </div>
 
@@ -60,7 +65,7 @@ export function Step1Form() {
           <Label htmlFor="baseModelId">Base model</Label>
           <select
             id="baseModelId"
-            className="flex h-11 w-full rounded-chip border border-input bg-card px-3 py-2 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="flex h-11 w-full sm:w-auto rounded-chip border border-input bg-card px-3 py-2 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             {...form.register("baseModelId")}
           >
             <option value="">Select a model</option>
@@ -82,9 +87,9 @@ export function Step1Form() {
           {baseModelError ? <p className="text-sm text-destructive">{baseModelError}</p> : null}
         </div>
 
-        <div className="flex justify-end">
+        <div>
           <Button type="submit" size="lg" disabled={modelsQuery.isLoading}>
-            Continue
+            Next: Configure
           </Button>
         </div>
       </form>

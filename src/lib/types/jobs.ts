@@ -36,3 +36,5 @@ export interface CreateJobPayload {
   warmupEpochs: number;
   learningRate: number;
 }
+
+export type JobMutationResponse = Record<string, unknown> | null;

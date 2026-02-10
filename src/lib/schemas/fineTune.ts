@@ -15,6 +15,13 @@ const epochsShape = {
   warmupEpochs: z.coerce.number().int().min(0, "Warm-up epochs cannot be negative")
 };
 
+const learningRateShape = {
+  learningRate: z.coerce
+    .number()
+    .gt(0, "Learning rate must be greater than 0")
+    .max(1, "Learning rate must not exceed 1")
+};
+
 const withEpochGuards = <T extends z.ZodTypeAny>(schema: T) =>
   schema.superRefine((data: z.infer<T>, ctx: z.RefinementCtx) => {
     const epochs = data as {
@@ -39,21 +46,21 @@ const withEpochGuards = <T extends z.ZodTypeAny>(schema: T) =>
     }
   });
 
-export const step2Schema = withEpochGuards(z.object(epochsShape));
+export const step2Schema = withEpochGuards(
+  z.object({
+    ...epochsShape,
+    ...learningRateShape
+  })
+);
 
-export const step3Schema = z.object({
-  learningRate: z.coerce
-    .number()
-    .gt(0, "Learning rate must be greater than 0")
-    .max(1, "Learning rate must not exceed 1")
-});
+export const step3Schema = z.object({});
 
 export const fineTuneSchema = withEpochGuards(
   z.object({
     jobName: step1Schema.shape.jobName,
     baseModelId: step1Schema.shape.baseModelId,
     ...epochsShape,
-    learningRate: step3Schema.shape.learningRate
+    ...learningRateShape
   })
 );
 

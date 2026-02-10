@@ -4,9 +4,10 @@ import Link from "next/link";
 import { LoaderCircle, Wrench } from "lucide-react";
 import { useSetAtom } from "jotai";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useJobsQuery } from "@/features/jobs/hooks";
+import { APP_ROUTES } from "@/lib/constants/routes";
 import { resetDraftAtom } from "@/lib/state/fineTuneDraft";
 
 import { DashboardHeader } from "./dashboard-header";
@@ -38,10 +39,10 @@ export function DashboardView() {
       ) : data ? (
         <div className="flex gap-4 flex-col lg:flex-row">
           <Card className="flex-1">
-            <CardHeader>
-              <CardTitle>Fine-tuning usage</CardTitle>
-              <CardDescription>Card description</CardDescription>
-            </CardHeader>
+              <CardHeader>
+                <CardTitle>Fine-tuning usage</CardTitle>
+                <CardDescription>Current status and recent fine-tuning jobs.</CardDescription>
+              </CardHeader>
 
             <CardContent>
               <SummaryCard summary={data.summary} />
@@ -78,10 +79,12 @@ export function DashboardView() {
                   </CardHeader>
 
                   <div>
-                    <Link href="/jobs/new/step-1">
-                      <Button size="lg" onClick={() => resetDraft()}>
-                        New Fine-tuning Job
-                      </Button>
+                    <Link
+                      href={APP_ROUTES.jobsNewStep1}
+                      className={buttonVariants({ size: "lg" })}
+                      onClick={() => resetDraft()}
+                    >
+                      New Fine-tuning Job
                     </Link>
                   </div>
                 </CardContent>

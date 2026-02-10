@@ -57,6 +57,15 @@ High-level layers:
 4. Route forwards request through `deleteJob()` in `src/lib/api/server.ts`.
 5. On success, jobs query invalidates and dashboard refreshes.
 
+## Testing Strategy
+
+The repo uses a risk-based test suite (Vitest + Testing Library + MSW):
+
+- `src/lib/schemas/*.test.ts`: Zod validation and cross-field rules.
+- `src/lib/api/*.test.ts`: Client/server adapter behavior and error handling.
+- `src/app/api/**/*.test.ts`: Route-handler contract and status propagation.
+- `src/features/jobs/components/*.test.tsx`: Core create-flow and delete-job UI interactions.
+
 ## State Management
 
 - Store: Jotai with explicit root provider store in `src/providers/app-providers.tsx`.
@@ -121,5 +130,8 @@ Compatibility alias tokens preserve shadcn-style utility names (`background`, `f
 ## Developer Tooling
 
 - Prettier is the source of truth for code formatting via `.prettierrc.json`.
+- ESLint is configured via `eslint.config.mjs` and runs non-interactively through `npm run lint`.
+- Type checking runs via `npm run typecheck` (`tsc --noEmit`).
+- Tests run via `npm run test` (Vitest).
 - Run `npm run format` to apply formatting and `npm run format:check` to verify consistency.
 - `.editorconfig` mirrors core whitespace/newline rules for editor alignment.

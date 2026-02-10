@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 
 import { PageShell } from "@/features/jobs/components/page-shell";
+import { APP_ROUTES } from "@/lib/constants/routes";
 import { ArrowLeftIcon, WrenchIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,10 +22,10 @@ function JobsNewHeader() {
   const pathname = usePathname();
 
   const backHref = pathname?.endsWith("/step-3")
-    ? "/jobs/new/step-2"
+    ? APP_ROUTES.jobsNewStep2
     : pathname?.endsWith("/step-2")
-      ? "/jobs/new/step-1"
-      : "/";
+      ? APP_ROUTES.jobsNewStep1
+      : APP_ROUTES.dashboard;
 
   return (
     <header className="flex gap-4 items-center">

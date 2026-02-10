@@ -1,5 +1,10 @@
 import { fineTuneSchema } from "@/lib/schemas/fineTune";
-import type { CreateJobPayload, JobsResponse, ModelOption } from "@/lib/types/jobs";
+import type {
+  CreateJobPayload,
+  JobMutationResponse,
+  JobsResponse,
+  ModelOption
+} from "@/lib/types/jobs";
 
 async function parseResponse<T>(response: Response): Promise<T> {
   const text = await response.text();
@@ -9,13 +14,13 @@ async function parseResponse<T>(response: Response): Promise<T> {
       if (!text) return { message: "Request failed" };
 
       try {
-        return JSON.parse(text) as { message?: string };
+        return JSON.parse(text) as { message?: string; error?: string };
       } catch {
         return { message: text };
       }
     })();
 
-    throw new Error(error.message || "Request failed");
+    throw new Error(error.message || error.error || "Request failed");
   }
 
   if (!text || response.status === 204) {
@@ -45,7 +50,7 @@ export async function postJob(payload: CreateJobPayload) {
     body: JSON.stringify(validated)
   });
 
-  return parseResponse<unknown>(response);
+  return parseResponse<JobMutationResponse>(response);
 }
 
 export async function deleteJob(jobId: string) {
@@ -53,5 +58,5 @@ export async function deleteJob(jobId: string) {
     method: "DELETE"
   });
 
-  return parseResponse<unknown>(response);
+  return parseResponse<JobMutationResponse>(response);
 }

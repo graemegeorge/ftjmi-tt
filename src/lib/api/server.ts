@@ -1,4 +1,10 @@
-import { CreateJobPayload, JobStatus, JobsResponse, ModelOption } from "@/lib/types/jobs";
+import {
+  CreateJobPayload,
+  JobMutationResponse,
+  JobStatus,
+  JobsResponse,
+  ModelOption
+} from "@/lib/types/jobs";
 
 const API_BASE_URL =
   process.env.FINE_TUNE_API_BASE_URL || "https://fe-test-api-production-cb39.up.railway.app";
@@ -138,7 +144,7 @@ export async function fetchModels(): Promise<ModelOption[]> {
     .filter((model): model is ModelOption => Boolean(model?.id));
 }
 
-export async function createJob(payload: CreateJobPayload): Promise<unknown> {
+export async function createJob(payload: CreateJobPayload): Promise<JobMutationResponse> {
   const response = await externalFetch("/api/jobs", {
     method: "POST",
     body: JSON.stringify(mapCreatePayload(payload))
@@ -147,7 +153,7 @@ export async function createJob(payload: CreateJobPayload): Promise<unknown> {
   return response.json();
 }
 
-export async function deleteJob(jobId: string): Promise<unknown> {
+export async function deleteJob(jobId: string): Promise<JobMutationResponse> {
   const response = await externalFetch(`/api/jobs/${encodeURIComponent(jobId)}`, {
     method: "DELETE"
   });
