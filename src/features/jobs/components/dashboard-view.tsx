@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { LoaderCircle, Wrench } from "lucide-react";
+import { useSetAtom } from "jotai";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useJobsQuery } from "@/features/jobs/hooks";
+import { resetDraftAtom } from "@/lib/state/fineTuneDraft";
 
 import { DashboardHeader } from "./dashboard-header";
 import { JobsTable } from "./jobs-table";
@@ -14,6 +16,7 @@ import { SummaryCard } from "./summary-card";
 export function DashboardView() {
   const jobsQuery = useJobsQuery();
   const data = jobsQuery.data;
+  const resetDraft = useSetAtom(resetDraftAtom);
 
   return (
     <div className="space-y-6">
@@ -56,9 +59,12 @@ export function DashboardView() {
 
             <CardContent>
               <Card orientation="horizontal" className="flex-1">
-                <CardHeader bg="muted" className="items-center justify-center border-r p-8">
-                  <div className="rounded-3xl bg-primary/10 p-6">
-                    <Wrench className="h-12 w-12 text-primary" />
+                <CardHeader bg="muted" className="items-center justify-center border-r p-6">
+                  <div className="rounded-3xl p-6">
+                    <Wrench
+                      className="h-20 w-20 text-primary"
+                      color="rgb(var(--sys-brand-accent))"
+                    />
                   </div>
                 </CardHeader>
 
@@ -67,13 +73,15 @@ export function DashboardView() {
                     <CardTitle>Get started with Fine-tuning</CardTitle>
                     <CardDescription>
                       Simple, ready-to-use inference endpoints that are paid for per request. No
-                      commitments, only pay for what you use.
+                      commitments, only pay for what you use with Nscale Serverless.
                     </CardDescription>
                   </CardHeader>
 
                   <div>
                     <Link href="/jobs/new/step-1">
-                      <Button size="lg">New Fine-tuning Job</Button>
+                      <Button size="lg" onClick={() => resetDraft()}>
+                        New Fine-tuning Job
+                      </Button>
                     </Link>
                   </div>
                 </CardContent>

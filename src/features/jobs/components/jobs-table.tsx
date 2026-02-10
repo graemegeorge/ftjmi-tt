@@ -100,7 +100,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
         <Table className="table-fixed">
           <colgroup>
             <col />
-            <col className="w-30" />
+            <col className="w-32" />
             <col className="w-30" />
             <col className="w-15" />
           </colgroup>
@@ -117,7 +117,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
               <TableRow key={job.id}>
                 <TableCell className="font-medium">
                   <div className="flex w-full items-center justify-between rounded-md bg-gray-100">
-                    <span className="min-w-0 flex-1 truncate px-2 text-center lg:text-left">
+                    <span className="min-w-0 flex-1 truncate px-2 text-center lg:text-left font-mono text-xs">
                       {job.id}
                     </span>
                     <CopyToClipboardButton
@@ -165,7 +165,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
         onOpenChange={(open) => !open && setJobPendingDelete(null)}
       >
         <AlertDialogContent>
-          <AlertDialogHeader>
+          <AlertDialogHeader className="gap-4">
             <AlertDialogTitle>Delete job?</AlertDialogTitle>
             <AlertDialogDescription>
               {jobPendingDelete

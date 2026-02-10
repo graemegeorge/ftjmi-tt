@@ -18,39 +18,20 @@ interface FlowLayoutProps {
 
 export function FlowLayout({ currentStep, title, description, children }: FlowLayoutProps) {
   return (
-    <div className="mx-auto w-full max-w-2xl space-y-5">
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <Link href="/" className="font-medium hover:text-foreground">
-          Back to dashboard
-        </Link>
-        <span>{currentStep} / 3</span>
-      </div>
-
-      <div className="grid grid-cols-3 gap-2">
-        {steps.map((step, index) => {
-          const stepNumber = index + 1;
-          return (
-            <div
-              key={step.path}
-              className={
-                stepNumber === currentStep
-                  ? "rounded-full bg-primary py-1.5 text-center text-xs font-semibold text-primary-foreground"
-                  : "rounded-full bg-muted py-1.5 text-center text-xs font-medium text-muted-foreground"
-              }
-            >
-              {step.label}
-            </div>
-          );
-        })}
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <p className="text-sm text-muted-foreground">{description}</p>
+    <Card className="relative">
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </CardHeader>
+      <Card
+        className="absolute top-6 right-6 w-fit font-mono text-muted-foreground flex flex-row items-center gap-2 rounded-sm text-sm"
+        raised={false}
+      >
+        <CardHeader bg="muted" className="px-2 py-1 flex flex-row items-center gap-2">
+          <span className="text-primary">{currentStep}</span> of 3
         </CardHeader>
-        <CardContent>{children}</CardContent>
       </Card>
-    </div>
+      <CardContent>{children}</CardContent>
+    </Card>
   );
 }

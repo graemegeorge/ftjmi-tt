@@ -23,6 +23,8 @@
   --ref-shadow-panel: 0 1px 1px rgb(15 23 42 / 0.04), 0 8px 24px -20px rgb(15 23 42 / 0.35);
   --ref-shadow-floating: 0 12px 36px -24px rgb(15 23 42 / 0.5);
 
+  --sys-brand-accent: 177 70 11;
+
   /* Semantic runtime tokens (light theme) */
   --sys-bg-canvas: var(--ref-color-slate-100);
   --sys-bg-card: var(--ref-color-white);

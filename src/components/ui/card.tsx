@@ -6,13 +6,20 @@ type CardOrientation = "vertical" | "horizontal";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   orientation?: CardOrientation;
+  raised?: boolean;
 }
 
-export function Card({ className, orientation = "vertical", ...props }: CardProps) {
+export function Card({
+  className,
+  orientation = "vertical",
+  raised = true,
+  ...props
+}: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-card border bg-card text-card-foreground shadow-panel overflow-hidden",
+        "rounded-card border bg-card text-card-foreground overflow-hidden",
+        raised && "shadow-panel",
         orientation === "horizontal" ? "flex flex-row items-stretch" : "flex flex-col",
         className
       )}
@@ -43,10 +50,7 @@ export function CardHeader({ className, bg = "transparent", ...props }: CardHead
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3
-      className={cn("font-semibold text-2xl leading-none tracking-tight", className)}
-      {...props}
-    />
+    <h3 className={cn("font-semibold text-xl leading-none tracking-tight", className)} {...props} />
   );
 }
 
@@ -54,7 +58,7 @@ export function CardDescription({
   className,
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("text-md text-muted-foreground", className)} {...props} />;
+  return <p className={cn("text-sm text-muted-foreground", className)} {...props} />;
 }
 
 export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
