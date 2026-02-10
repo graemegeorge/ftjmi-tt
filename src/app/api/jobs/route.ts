@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { ZodError } from "zod";
 
 import { fineTuneSchema } from "@/lib/schemas/fineTune";
 import { createJob, ExternalApiError, fetchJobs } from "@/lib/api/server";
@@ -8,6 +9,10 @@ export async function GET() {
     const data = await fetchJobs();
     return NextResponse.json(data);
   } catch (error) {
+    if (error instanceof ExternalApiError) {
+      return NextResponse.json(error.payload, { status: error.status });
+    }
+
     const message = error instanceof Error ? error.message : "Unable to fetch jobs";
     return NextResponse.json({ message }, { status: 500 });
   }
@@ -20,7 +25,7 @@ export async function POST(request: Request) {
     const data = await createJob(payload);
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
-    if (error instanceof Error && error.name === "ZodError") {
+    if (error instanceof ZodError) {
       return NextResponse.json({ message: error.message }, { status: 400 });
     }
 
