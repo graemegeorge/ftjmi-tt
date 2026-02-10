@@ -29,19 +29,16 @@ const withEpochGuards = <T extends z.ZodTypeAny>(schema: T) =>
       evaluationEpochs: number;
       warmupEpochs: number;
     };
-    if (epochs.evaluationEpochs > epochs.trainingEpochs) {
+    if (epochs.evaluationEpochs + epochs.warmupEpochs > epochs.trainingEpochs) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["evaluationEpochs"],
-        message: "Evaluation epochs must not exceed training epochs"
+        message: "Evaluation epochs must be less than or equal to training epochs minus warm-up epochs"
       });
-    }
-
-    if (epochs.warmupEpochs > epochs.trainingEpochs) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["warmupEpochs"],
-        message: "Warm-up epochs must not exceed training epochs"
+        message: "Warm-up epochs must be less than or equal to training epochs minus evaluation epochs"
       });
     }
   });

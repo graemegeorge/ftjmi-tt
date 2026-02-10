@@ -40,6 +40,28 @@ describe("fineTune schemas", () => {
     expect(invalid.success).toBe(false);
   });
 
+  it("accepts edge case where evaluation plus warmup equals training", () => {
+    const result = step2Schema.safeParse({
+      trainingEpochs: 5,
+      evaluationEpochs: 2,
+      warmupEpochs: 3,
+      learningRate: 0.0001
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects when evaluation plus warmup exceeds training", () => {
+    const result = step2Schema.safeParse({
+      trainingEpochs: 5,
+      evaluationEpochs: 3,
+      warmupEpochs: 3,
+      learningRate: 0.0001
+    });
+
+    expect(result.success).toBe(false);
+  });
+
   it("accepts empty step 3 review payload", () => {
     expect(step3Schema.parse({})).toEqual({});
   });
