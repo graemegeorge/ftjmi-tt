@@ -117,7 +117,9 @@ export function JobsTable({ jobs }: JobsTableProps) {
               <TableRow key={job.id}>
                 <TableCell className="font-medium">
                   <div className="flex w-full items-center justify-between rounded-md bg-gray-100">
-                    <span className="min-w-0 flex-1 truncate px-2">{job.id}</span>
+                    <span className="min-w-0 flex-1 truncate px-2 text-center lg:text-left">
+                      {job.id}
+                    </span>
                     <CopyToClipboardButton
                       ariaLabel={`Copy job id ${job.id}`}
                       className="text-muted-foreground"

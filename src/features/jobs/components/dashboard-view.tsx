@@ -1,7 +1,9 @@
 "use client";
 
-import { LoaderCircle } from "lucide-react";
+import Link from "next/link";
+import { LoaderCircle, Wrench } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useJobsQuery } from "@/features/jobs/hooks";
 
@@ -31,7 +33,7 @@ export function DashboardView() {
           </CardContent>
         </Card>
       ) : data ? (
-        <div className="flex gap-4 flex-col md:flex-row">
+        <div className="flex gap-4 flex-col lg:flex-row">
           <Card className="flex-1">
             <CardHeader>
               <CardTitle>Fine-tuning usage</CardTitle>
@@ -49,8 +51,34 @@ export function DashboardView() {
 
           <Card className="flex-1">
             <CardHeader>
-              <CardTitle>Get started</CardTitle>
+              <CardTitle>Get Started</CardTitle>
             </CardHeader>
+
+            <CardContent>
+              <Card orientation="horizontal" className="flex-1">
+                <CardHeader bg="muted" className="items-center justify-center border-r p-8">
+                  <div className="rounded-3xl bg-primary/10 p-6">
+                    <Wrench className="h-12 w-12 text-primary" />
+                  </div>
+                </CardHeader>
+
+                <CardContent className="flex flex-1 flex-col justify-center gap-4 p-6 sm:p-8">
+                  <CardHeader className="space-y-2 p-0">
+                    <CardTitle>Get started with Fine-tuning</CardTitle>
+                    <CardDescription>
+                      Simple, ready-to-use inference endpoints that are paid for per request. No
+                      commitments, only pay for what you use.
+                    </CardDescription>
+                  </CardHeader>
+
+                  <div>
+                    <Link href="/jobs/new/step-1">
+                      <Button size="lg">New Fine-tuning Job</Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </CardContent>
           </Card>
         </div>
       ) : (

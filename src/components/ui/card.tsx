@@ -2,17 +2,43 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+type CardOrientation = "vertical" | "horizontal";
+
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  orientation?: CardOrientation;
+}
+
+export function Card({ className, orientation = "vertical", ...props }: CardProps) {
   return (
     <div
-      className={cn("rounded-card border bg-card text-card-foreground shadow-panel", className)}
+      className={cn(
+        "rounded-card border bg-card text-card-foreground shadow-panel overflow-hidden",
+        orientation === "horizontal" ? "flex flex-row items-stretch" : "flex flex-col",
+        className
+      )}
       {...props}
     />
   );
 }
 
-export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("flex flex-col gap-1.5 p-6", className)} {...props} />;
+type CardHeaderBackground = "transparent" | "default" | "muted";
+
+interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  bg?: CardHeaderBackground;
+}
+
+export function CardHeader({ className, bg = "transparent", ...props }: CardHeaderProps) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col gap-1.5 p-6",
+        bg === "default" && "bg-card",
+        bg === "muted" && "bg-muted/40",
+        className
+      )}
+      {...props}
+    />
+  );
 }
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
