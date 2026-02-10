@@ -81,7 +81,7 @@ Required env in `.env.local`:
 
 ## Scope Guardrails
 
-- Optional delete-job support is currently out of scope.
+- Delete-job support is in scope and exposed on the dashboard.
 - Do not add backend/database draft persistence unless explicitly requested.
 - Prioritize clean business logic and maintainability over extra UI effects.
 
@@ -89,5 +89,5 @@ Required env in `.env.local`:
 
 1. Update or add Zod schema if behavior changes.
 2. Verify internal API route contract is still stable.
-3. Run `npm run build` before handing off.
+3. Run `npm run lint`, `npm run typecheck`, `npm run build`, and `npm run test` before handing off.
 4. Update `README.md` + `ARCHITECTURE.md` when structure or behavior changes.

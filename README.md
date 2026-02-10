@@ -55,9 +55,27 @@ npm run build
 npm run start
 npm run lint
 npm run typecheck
+npm run test
+npm run test:watch
 npm run format
 npm run format:check
 ```
+
+Recommended quality gate sequence:
+
+```bash
+npm run lint && npm run typecheck && npm run build && npm run test
+```
+
+## Testing
+
+The test suite uses Vitest, Testing Library, and MSW.
+
+- Schema tests: validation and cross-field guards in `src/lib/schemas/fineTune.ts`
+- Adapter tests: normalization and error mapping in `src/lib/api/server.ts`
+- Route tests: `/api/jobs`, `/api/jobs/[id]`, and `/api/models` handler behavior
+- Client API tests: error parsing and `204` handling in `src/lib/api/client.ts`
+- UI flow tests: create-flow guard/submission and jobs-table delete confirmation
 
 ## Implementation Notes
 
