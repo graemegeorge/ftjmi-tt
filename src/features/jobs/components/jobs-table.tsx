@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CopyToClipboardButton } from "@/components/ui/copy-to-clipboard-button";
 import {
   Table,
   TableBody,
@@ -35,7 +35,39 @@ interface JobsTableProps {
 function formatDate(value: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "-";
-  return date.toLocaleString();
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function formatTimeAgo(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+
+  const now = Date.now();
+  const diffInSeconds = Math.round((date.getTime() - now) / 1000);
+  const absSeconds = Math.abs(diffInSeconds);
+
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+  if (absSeconds < 60) return rtf.format(diffInSeconds, "second");
+
+  const diffInMinutes = Math.round(diffInSeconds / 60);
+  if (Math.abs(diffInMinutes) < 60) return rtf.format(diffInMinutes, "minute");
+
+  const diffInHours = Math.round(diffInMinutes / 60);
+  if (Math.abs(diffInHours) < 24) return rtf.format(diffInHours, "hour");
+
+  const diffInDays = Math.round(diffInHours / 24);
+  if (Math.abs(diffInDays) < 30) return rtf.format(diffInDays, "day");
+
+  const diffInMonths = Math.round(diffInDays / 30);
+  if (Math.abs(diffInMonths) < 12) return rtf.format(diffInMonths, "month");
+
+  const diffInYears = Math.round(diffInDays / 365);
+  return rtf.format(diffInYears, "year");
 }
 
 export function JobsTable({ jobs }: JobsTableProps) {
@@ -59,60 +91,73 @@ export function JobsTable({ jobs }: JobsTableProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Job History</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {jobs.length === 0 ? (
-          <div className="rounded-card border border-dashed px-5 py-12 text-center text-sm text-muted-foreground">
-            No jobs yet. Start by creating your first fine-tuning job.
-          </div>
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Job</TableHead>
-                <TableHead>Base model</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Epochs</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead className="text-right">Delete</TableHead>
+    <>
+      {jobs.length === 0 ? (
+        <div className="rounded-card border border-dashed px-5 py-12 text-center text-sm text-muted-foreground">
+          No jobs yet. Start by creating your first fine-tuning job.
+        </div>
+      ) : (
+        <Table className="table-fixed">
+          <colgroup>
+            <col />
+            <col className="w-30" />
+            <col className="w-30" />
+            <col className="w-15" />
+          </colgroup>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Job ID</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead className="text-right">Status</TableHead>
+              <TableHead></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {jobs.map((job) => (
+              <TableRow key={job.id}>
+                <TableCell className="font-medium">
+                  <div className="flex w-full items-center justify-between rounded-md bg-gray-100">
+                    <span className="min-w-0 flex-1 truncate px-2">{job.id}</span>
+                    <CopyToClipboardButton
+                      ariaLabel={`Copy job id ${job.id}`}
+                      className="text-muted-foreground"
+                      successMessage="Job id copied to clipboard"
+                      value={job.id}
+                    />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-0.5">
+                    <p className="text-sm">{formatDate(job.createdAt)}</p>
+                    <p className="text-xs text-muted-foreground">{formatTimeAgo(job.createdAt)}</p>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Badge variant={job.status}>{job.status}</Badge>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    aria-label={`Delete ${job.name}`}
+                    className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    disabled={deletingJobId === job.id}
+                    onClick={() => setJobPendingDelete(job)}
+                    size="sm"
+                    title="Delete job"
+                    variant="ghost"
+                  >
+                    {deletingJobId === job.id ? (
+                      <LoaderCircle className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="h-4 w-4" />
+                    )}
+                  </Button>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {jobs.map((job) => (
-                <TableRow key={job.id}>
-                  <TableCell className="font-medium">{job.name}</TableCell>
-                  <TableCell>{job.baseModel}</TableCell>
-                  <TableCell>
-                    <Badge variant={job.status}>{job.status}</Badge>
-                  </TableCell>
-                  <TableCell>{job.trainingEpochs}</TableCell>
-                  <TableCell>{formatDate(job.createdAt)}</TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      aria-label={`Delete ${job.name}`}
-                      className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                      disabled={deletingJobId === job.id}
-                      onClick={() => setJobPendingDelete(job)}
-                      size="sm"
-                      title="Delete job"
-                      variant="ghost"
-                    >
-                      {deletingJobId === job.id ? (
-                        <LoaderCircle className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
-      </CardContent>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+
       <AlertDialog
         open={Boolean(jobPendingDelete)}
         onOpenChange={(open) => !open && setJobPendingDelete(null)}
@@ -134,6 +179,6 @@ export function JobsTable({ jobs }: JobsTableProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Card>
+    </>
   );
 }

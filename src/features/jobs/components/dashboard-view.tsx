@@ -2,12 +2,12 @@
 
 import { LoaderCircle } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useJobsQuery } from "@/features/jobs/hooks";
 
 import { DashboardHeader } from "./dashboard-header";
 import { JobsTable } from "./jobs-table";
-import { SummaryCards } from "./summary-cards";
+import { SummaryCard } from "./summary-card";
 
 export function DashboardView() {
   const jobsQuery = useJobsQuery();
@@ -31,10 +31,28 @@ export function DashboardView() {
           </CardContent>
         </Card>
       ) : data ? (
-        <>
-          <SummaryCards summary={data.summary} />
-          <JobsTable jobs={data.jobs} />
-        </>
+        <div className="flex gap-4 flex-col md:flex-row">
+          <Card className="flex-1">
+            <CardHeader>
+              <CardTitle>Fine-tuning usage</CardTitle>
+              <CardDescription>Card description</CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <SummaryCard summary={data.summary} />
+            </CardContent>
+
+            <CardContent>
+              <JobsTable jobs={data.jobs} />
+            </CardContent>
+          </Card>
+
+          <Card className="flex-1">
+            <CardHeader>
+              <CardTitle>Get started</CardTitle>
+            </CardHeader>
+          </Card>
+        </div>
       ) : (
         <Card>
           <CardContent className="py-16 text-center text-sm text-muted-foreground">
