@@ -7,9 +7,10 @@ The app is a single Next.js App Router project with a server-proxy boundary in f
 High-level layers:
 
 1. UI routes/components (`src/app`, `src/features/jobs/components`)
-2. Client data hooks (`src/features/jobs/hooks.ts`)
-3. Internal API routes (`src/app/api/*`)
-4. External adapter + normalization (`src/lib/api/server.ts`)
+2. Route-level server data fetch (`src/app/page.tsx` -> `src/lib/api/server.ts`)
+3. Client data hooks (`src/features/jobs/hooks/index.ts`)
+4. Internal API routes (`src/app/api/*`)
+5. External adapter + normalization (`src/lib/api/server.ts`)
 
 ## Directory Map
 
@@ -32,12 +33,13 @@ High-level layers:
 
 ### Dashboard (read path)
 
-1. `src/app/page.tsx` renders `DashboardView`.
-2. `DashboardView` uses `useJobsQuery()`.
-3. Query calls `getJobs()` in `src/lib/api/client.ts`.
-4. Client requests internal `GET /api/jobs`.
-5. Route handler calls `fetchJobs()` in `src/lib/api/server.ts`.
-6. External response is normalized to `JobsResponse` and returned.
+1. `src/app/page.tsx` (React Server Component) calls `fetchJobs()` from `src/lib/api/server.ts`.
+2. Server-normalized `JobsResponse` is passed to `DashboardView` as React Query `initialData`.
+3. `DashboardView` uses `useJobsQuery({ initialData })` for immediate first paint without client loading spinner.
+4. React Query still owns client refreshes/invalidation by calling `getJobs()` in `src/lib/api/client.ts`.
+5. Client requests internal `GET /api/jobs`.
+6. Route handler calls `fetchJobs()` in `src/lib/api/server.ts`.
+7. External response is normalized to `JobsResponse` and returned.
 
 ### Create Job (write path)
 

@@ -9,13 +9,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useJobsQuery } from "@/features/jobs/hooks";
 import { APP_ROUTES } from "@/lib/constants/routes";
 import { resetDraftAtom } from "@/lib/state/fineTuneDraft";
+import type { JobsResponse } from "@/lib/types/jobs";
 
 import { DashboardHeader } from "./dashboard-header";
 import { JobsTable } from "./jobs-table";
 import { SummaryCard } from "./summary-card";
 
-export function DashboardView() {
-  const jobsQuery = useJobsQuery();
+interface DashboardViewProps {
+  initialJobsData?: JobsResponse;
+}
+
+export function DashboardView({ initialJobsData }: DashboardViewProps) {
+  const jobsQuery = useJobsQuery({ initialData: initialJobsData });
   const data = jobsQuery.data;
   const resetDraft = useSetAtom(resetDraftAtom);
 
