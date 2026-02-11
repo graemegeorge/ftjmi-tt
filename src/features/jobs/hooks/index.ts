@@ -3,15 +3,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { deleteJob, getJobs, getModels, postJob } from "@/lib/api/client";
-import type { CreateJobPayload } from "@/lib/types/jobs";
+import type { CreateJobPayload, JobsResponse } from "@/lib/types/jobs";
 
 export const JOBS_QUERY_KEY = ["jobs"] as const;
 export const MODELS_QUERY_KEY = ["models"] as const;
 
-export function useJobsQuery() {
+interface UseJobsQueryOptions {
+  initialData?: JobsResponse;
+}
+
+export function useJobsQuery(options?: UseJobsQueryOptions) {
   return useQuery({
     queryKey: JOBS_QUERY_KEY,
-    queryFn: getJobs
+    queryFn: getJobs,
+    initialData: options?.initialData
   });
 }
 

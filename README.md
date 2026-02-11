@@ -9,6 +9,7 @@ Next.js App Router app for creating and monitoring AI fine-tuning jobs.
 - 3-step fine-tuning job creation flow
 - Centralized Zod validation with interdependent epoch rules
 - Persisted multi-step draft state across navigation + refresh
+- Hybrid data loading: dashboard initial data via React Server Component + React Query for client updates
 - Server-side API proxy with `x-api-key` kept off the client
 
 ## Tech Stack
@@ -81,6 +82,7 @@ The test suite uses Vitest, Testing Library, and MSW.
 
 - External API shape normalization + payload mapping lives in `src/lib/api/server.ts`.
 - Internal API routes are under `src/app/api/*`.
+- Dashboard `src/app/page.tsx` performs initial server fetch through `fetchJobs()` and passes it as React Query `initialData` into `DashboardView` for a no-spinner first render plus client-side refetch.
 - Dashboard delete action uses internal `DELETE /api/jobs/[id]` and confirms with shadcn `AlertDialog`, so API keys stay server-side.
 
 ## Design Tokens
