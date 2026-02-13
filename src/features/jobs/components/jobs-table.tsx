@@ -116,7 +116,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
             {jobs.map((job) => (
               <TableRow key={job.id}>
                 <TableCell className="font-medium">
-                  <div className="flex w-full items-center justify-between rounded-md bg-gray-100">
+                  <div className="flex w-full items-center justify-between rounded-md bg-muted">
                     <span className="min-w-0 flex-1 truncate px-2 text-center lg:text-left font-mono text-xs">
                       {job.id}
                     </span>

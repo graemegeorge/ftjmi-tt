@@ -5,6 +5,9 @@ import { Provider as JotaiProvider, createStore } from "jotai";
 import { useState } from "react";
 import type { ReactNode } from "react";
 
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { ThemeProvider } from "@/providers/theme-provider";
+
 export function AppProviders({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
     () =>
@@ -22,8 +25,13 @@ export function AppProviders({ children }: { children: ReactNode }) {
   const [jotaiStore] = useState(() => createStore());
 
   return (
-    <JotaiProvider store={jotaiStore}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </JotaiProvider>
+    <ThemeProvider>
+      <JotaiProvider store={jotaiStore}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+          <ThemeToggle />
+        </QueryClientProvider>
+      </JotaiProvider>
+    </ThemeProvider>
   );
 }
