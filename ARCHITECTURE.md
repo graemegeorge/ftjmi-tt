@@ -29,7 +29,7 @@ High-level layers:
 - `src/components/ui/*`
   - Shared UI primitives
 - `src/providers/*`
-  - App-level providers (React Query + Jotai store)
+  - App-level providers (Theme + React Query + Jotai store)
 
 ## Runtime Data Flow
 
@@ -116,8 +116,10 @@ External payload and response shapes are validated against generated contracts i
 
 Root layout wraps app with `AppProviders`:
 
+- `ThemeProvider` with persisted preference (`light`/`dark`/`system`) and runtime `.dark` class resolution
 - `JotaiProvider` with explicit `createStore()` instance
 - `QueryClientProvider` with shared query client
+- `ThemeToggle` fixed at top-right, always visible across routes
 
 This avoids default-store ambiguity and keeps global state deterministic.
 

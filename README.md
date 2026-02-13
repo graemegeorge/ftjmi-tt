@@ -7,6 +7,7 @@ Next.js App Router app for creating and monitoring AI fine-tuning jobs.
 - Dashboard with status summary (running/completed/failed) and job table
 - Job deletion from the dashboard table with shadcn `AlertDialog` confirmation
 - 3-step fine-tuning job creation flow
+- Light/dark theming with system-default mode and global top-right theme toggle
 - Centralized Zod validation with interdependent epoch rules
 - Persisted multi-step draft state across navigation + refresh
 - Hybrid data loading: dashboard initial data via React Server Component + React Query for client updates
@@ -112,6 +113,13 @@ Token layers live in `src/app/globals.css`:
 - `--ref-*`: primitive design reference values (raw colors, radii, shadows)
 - `--sys-*`: semantic runtime tokens used by the app theme
 - `@theme inline`: Tailwind utility exports and compatibility aliases
+
+Theme behavior:
+
+- Dark mode is activated by a root `.dark` class
+- Theme preference supports `light`, `dark`, and `system` (default)
+- Preference persists in `localStorage` (`theme-preference`)
+- A fixed top-right toggle is rendered globally from app providers
 
 Core exported utilities include:
 
