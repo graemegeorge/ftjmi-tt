@@ -19,10 +19,7 @@ const errorPayloadSchema = z
   })
   .passthrough();
 
-async function parseResponse<T>(
-  response: Response,
-  parse: (payload: unknown) => T
-): Promise<T> {
+async function parseResponse<T>(response: Response, parse: (payload: unknown) => T): Promise<T> {
   const text = await response.text();
 
   if (!response.ok) {

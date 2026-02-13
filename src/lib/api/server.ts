@@ -1,9 +1,4 @@
-import {
-  CreateJobPayload,
-  JobMutationResponse,
-  JobsResponse,
-  ModelOption
-} from "@/lib/types/jobs";
+import { CreateJobPayload, JobMutationResponse, JobsResponse, ModelOption } from "@/lib/types/jobs";
 import {
   parseExternalJobsResponse,
   parseExternalModelsResponse,

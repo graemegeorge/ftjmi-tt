@@ -7,4 +7,3 @@ export const DEFAULT_THEME_PREFERENCE: ThemePreference = "system";
 export function isThemePreference(value: string | null): value is ThemePreference {
   return value === "light" || value === "dark" || value === "system";
 }
-
