@@ -17,34 +17,29 @@ describe("server API adapter", () => {
     process.env.FINE_TUNE_API_BASE_URL = originalBaseUrl;
   });
 
-  it("normalizes jobs payload and derives summary fallback", async () => {
+  it("normalizes jobs payload using the external API contract", async () => {
     vi.spyOn(global, "fetch").mockResolvedValue(
       new Response(
         JSON.stringify({
           jobs: [
             {
-              job_id: "job-1",
-              job_name: "Training",
-              status: "completed",
-              base_model: "base-1",
-              created_at: "2026-01-01T00:00:00.000Z",
+              id: "job-1",
+              name: "Training",
+              status: "Completed",
+              baseModel: "base-1",
+              date: "2026-01-01T00:00:00.000Z",
+              createdAt: "2026-01-01T00:00:00.000Z",
               epochs: 4,
-              evaluation_epochs: 1,
-              warmup_epochs: 1,
-              learning_rate: 0.0001
-            },
-            {
-              id: "job-2",
-              name: "Another",
-              status: "failed",
-              baseModel: "base-2",
-              createdAt: "2026-01-02T00:00:00.000Z",
-              trainingEpochs: 2,
               evaluationEpochs: 1,
               warmupEpochs: 1,
-              learningRate: 0.0002
+              learningRate: 0.0001
             }
-          ]
+          ],
+          summary: {
+            running: 0,
+            completed: 1,
+            failed: 0
+          }
         })
       )
     );
@@ -54,7 +49,7 @@ describe("server API adapter", () => {
     expect(result.summary).toEqual({
       running: 0,
       completed: 1,
-      failed: 1
+      failed: 0
     });
     expect(result.jobs[0]).toMatchObject({
       id: "job-1",
@@ -64,21 +59,52 @@ describe("server API adapter", () => {
     });
   });
 
-  it("normalizes mixed model payload shapes", async () => {
+  it("normalizes model payload shapes from the external contract", async () => {
     vi.spyOn(global, "fetch").mockResolvedValue(
       new Response(
-        JSON.stringify({
-          models: ["model-a", { model_id: "model-b", model_name: "Model B" }]
-        })
+        JSON.stringify([
+          { id: "model-a", displayName: "Model A" },
+          { id: "model-b", displayName: "Model B" }
+        ])
       )
     );
 
     const result = await fetchModels();
 
     expect(result).toEqual([
-      { id: "model-a", name: "model-a" },
+      { id: "model-a", name: "Model A" },
       { id: "model-b", name: "Model B" }
     ]);
+  });
+
+  it("throws 502 ExternalApiError for invalid jobs response shape", async () => {
+    vi.spyOn(global, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          jobs: []
+        })
+      )
+    );
+
+    await expect(fetchJobs()).rejects.toMatchObject({
+      status: 502,
+      payload: { message: "Invalid jobs response from external API" }
+    });
+  });
+
+  it("throws 502 ExternalApiError for invalid models response shape", async () => {
+    vi.spyOn(global, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          models: ["model-a"]
+        })
+      )
+    );
+
+    await expect(fetchModels()).rejects.toMatchObject({
+      status: 502,
+      payload: { message: "Invalid models response from external API" }
+    });
   });
 
   it("throws ExternalApiError for non-2xx responses", async () => {
