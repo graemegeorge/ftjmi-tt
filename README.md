@@ -52,6 +52,9 @@ npm run dev
 
 ```bash
 npm run dev
+npm run api:sync
+npm run api:generate
+npm run api:regen
 npm run build
 npm run start
 npm run lint
@@ -72,18 +75,35 @@ npm run lint && npm run typecheck && npm run build && npm run test
 
 The test suite uses Vitest, Testing Library, and MSW.
 
-- Schema tests: validation and cross-field guards in `src/lib/schemas/fineTune.ts`
+- Schema tests: request validation contracts in `src/lib/schemas/*`
 - Adapter tests: normalization and error mapping in `src/lib/api/server.ts`
 - Route tests: `/api/jobs`, `/api/jobs/[id]`, and `/api/models` handler behavior
-- Client API tests: error parsing and `204` handling in `src/lib/api/client.ts`
+- Client API tests: error parsing, response schema validation, and `204` handling in `src/lib/api/client.ts`
 - UI flow tests: create-flow guard/submission and jobs-table delete confirmation
 
 ## Implementation Notes
 
 - External API shape normalization + payload mapping lives in `src/lib/api/server.ts`.
+- OpenAPI source-of-truth is synced to `src/lib/api/generated/openapi.json`.
+- Generated Zod/TypeScript contracts live in `src/lib/api/generated/openapi.zod.ts`.
+- Runtime parsing boundaries:
+  - Internal API payload parsing: `src/lib/api/contracts.ts`
+  - External API payload parsing/mapping: `src/lib/api/contracts.external.ts`
+- Upstream payloads failing generated-contract validation return `502` via internal API routes.
 - Internal API routes are under `src/app/api/*`.
 - Dashboard `src/app/page.tsx` performs initial server fetch through `fetchJobs()` and passes it as React Query `initialData` into `DashboardView` for a no-spinner first render plus client-side refetch.
 - Dashboard delete action uses internal `DELETE /api/jobs/[id]` and confirms with shadcn `AlertDialog`, so API keys stay server-side.
+
+## OpenAPI Contract Workflow
+
+```bash
+npm run api:regen
+```
+
+- `api:sync` fetches the live OpenAPI JSON from Railway.
+- `api:generate` regenerates `openapi.zod.ts` from the synced spec.
+- `api:regen` runs both and should be used whenever the API contract changes.
+- `openapi.zod.ts` is gitignored and regenerated automatically via `predev`, `prebuild`, `pretypecheck`, and `pretest`.
 
 ## Design Tokens
 

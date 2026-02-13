@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated api contracts
+src/lib/api/generated/openapi.zod.ts

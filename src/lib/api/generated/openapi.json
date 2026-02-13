@@ -1,0 +1,442 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Job Training API",
+    "description": "API for managing ML model training jobs with workspace isolation and permissions.\n\nEach API key is associated with a workspace and has specific permissions.\nA maximum of 10 jobs can be created per workspace.\n\nAuthentication is required for all API endpoints using an API key.\n",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/api"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/openapi.json": {
+      "get": {
+        "summary": "Get OpenAPI specification",
+        "operationId": "getOpenApiSpec",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OpenAPI specification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health check endpoint",
+        "operationId": "healthCheck",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Health status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs": {
+      "get": {
+        "summary": "List all jobs",
+        "operationId": "listJobs",
+        "responses": {
+          "200": {
+            "description": "A list of jobs with summary statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "jobs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Job"
+                      }
+                    },
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "completed": {
+                          "type": "integer",
+                          "example": 5
+                        },
+                        "running": {
+                          "type": "integer",
+                          "example": 4
+                        },
+                        "failed": {
+                          "type": "integer",
+                          "example": 2
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new job",
+        "operationId": "createJob",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Job created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Validation failed"
+                    },
+                    "fields": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "example": {
+                        "name": "Name must be at least 3 characters long",
+                        "epochs": "Epochs must be a number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Insufficient permissions to create jobs"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - job limit reached",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Too Many Jobs"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Your workspace has reached the maximum limit of 10 jobs. Please delete some jobs before creating new ones."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/{id}": {
+      "get": {
+        "summary": "Get a specific job by ID",
+        "operationId": "getJob",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Job not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a specific job by ID",
+        "operationId": "deleteJob",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Job deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Insufficient permissions to delete jobs"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Job not found"
+          }
+        }
+      }
+    },
+    "/models": {
+      "get": {
+        "summary": "List all available models",
+        "operationId": "listModels",
+        "responses": {
+          "200": {
+            "description": "A list of available models",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Model"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "API key for authentication and workspace access"
+      }
+    },
+    "schemas": {
+      "Model": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "meta-llama/Llama-3.1-8B-Instruct"
+          },
+          "displayName": {
+            "type": "string",
+            "example": "Llama 3.1 8B Instruct"
+          }
+        },
+        "required": [
+          "id",
+          "displayName"
+        ]
+      },
+      "JobInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Job name (3-50 chars, alphanumeric and dashes, can't end in dash)",
+            "example": "llama-fine-tune-experiment-1"
+          },
+          "baseModel": {
+            "type": "string",
+            "description": "Base model to use for training",
+            "enum": [
+              "meta-llama/Llama-3.1-8B-Instruct",
+              "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+              "Qwen/QwQ-32B"
+            ],
+            "example": "meta-llama/Llama-3.1-8B-Instruct"
+          },
+          "epochs": {
+            "type": "integer",
+            "description": "Number of training epochs",
+            "example": 3
+          },
+          "evaluationEpochs": {
+            "type": "integer",
+            "description": "Number of evaluation epochs (must be <= epochs - warmupEpochs)",
+            "example": 1
+          },
+          "warmupEpochs": {
+            "type": "integer",
+            "description": "Number of warmup epochs (must be <= epochs - evaluationEpochs)",
+            "example": 1
+          },
+          "learningRate": {
+            "type": "number",
+            "format": "float",
+            "description": "Learning rate between 0 and 1",
+            "minimum": 0,
+            "maximum": 1,
+            "example": 0.0001
+          }
+        },
+        "required": [
+          "name",
+          "baseModel",
+          "epochs",
+          "evaluationEpochs",
+          "warmupEpochs",
+          "learningRate"
+        ]
+      },
+      "Job": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "bdddd55ea1-41a-10e-9090"
+          },
+          "name": {
+            "type": "string",
+            "example": "llama-fine-tune-experiment-1"
+          },
+          "baseModel": {
+            "type": "string",
+            "example": "meta-llama/Llama-3.1-8B-Instruct"
+          },
+          "epochs": {
+            "type": "integer",
+            "example": 3
+          },
+          "evaluationEpochs": {
+            "type": "integer",
+            "example": 1
+          },
+          "warmupEpochs": {
+            "type": "integer",
+            "example": 1
+          },
+          "learningRate": {
+            "type": "number",
+            "example": 0.0001
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-04-24T10:00:00Z"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-04-08T09:55:20Z"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Running",
+              "Completed",
+              "Failed"
+            ],
+            "example": "Running"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "baseModel",
+          "epochs",
+          "evaluationEpochs",
+          "warmupEpochs",
+          "learningRate",
+          "date",
+          "createdAgo",
+          "status"
+        ]
+      }
+    }
+  }
+}

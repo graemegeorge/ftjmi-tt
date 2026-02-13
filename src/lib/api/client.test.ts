@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { deleteJob, getJobs, postJob } from "@/lib/api/client";
+import { deleteJob, getJobs, getModels, postJob } from "@/lib/api/client";
 
 describe("client API wrappers", () => {
   afterEach(() => {
@@ -16,6 +16,22 @@ describe("client API wrappers", () => {
       jobs: [],
       summary: { running: 0, completed: 0, failed: 0 }
     });
+  });
+
+  it("rejects invalid jobs response payload", async () => {
+    vi.spyOn(global, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ jobs: {}, summary: { running: 0, completed: 0, failed: 0 } }))
+    );
+
+    await expect(getJobs()).rejects.toThrow();
+  });
+
+  it("rejects invalid models response payload", async () => {
+    vi.spyOn(global, "fetch").mockResolvedValue(
+      new Response(JSON.stringify([{ id: "", name: "Invalid model" }]))
+    );
+
+    await expect(getModels()).rejects.toThrow();
   });
 
   it("surfaces message field from failed response", async () => {

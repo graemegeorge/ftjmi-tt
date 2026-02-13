@@ -20,8 +20,10 @@ High-level layers:
   - Job feature hooks and composed UI
 - `src/lib/api/*`
   - Client and server API helpers
+- `src/lib/api/generated/*`
+  - Synced OpenAPI source and generated Zod/TS contracts
 - `src/lib/schemas/*`
-  - Zod validation schemas and inferred types
+  - Zod request validation schemas and inferred types
 - `src/lib/state/*`
   - Jotai atoms for multi-step draft state
 - `src/components/ui/*`
@@ -40,6 +42,7 @@ High-level layers:
 5. Client requests internal `GET /api/jobs`.
 6. Route handler calls `fetchJobs()` in `src/lib/api/server.ts`.
 7. External response is normalized to `JobsResponse` and returned.
+8. Client wrapper `getJobs()` validates payload through parsers in `src/lib/api/contracts.ts` before returning data to React Query.
 
 ### Create Job (write path)
 
@@ -78,7 +81,7 @@ The repo uses a risk-based test suite (Vitest + Testing Library + MSW):
 
 ## Validation Model
 
-Centralized in `src/lib/schemas/fineTune.ts`:
+Request validation is centralized in `src/lib/schemas/fineTune.ts`:
 
 - Step 1: `jobName`, `baseModelId`
 - Step 2: `trainingEpochs`, `evaluationEpochs`, `warmupEpochs`
@@ -87,17 +90,26 @@ Centralized in `src/lib/schemas/fineTune.ts`:
   - `evaluationEpochs <= trainingEpochs`
   - `warmupEpochs <= trainingEpochs`
 
+Generated API contracts are sourced from OpenAPI:
+
+- Synced spec: `src/lib/api/generated/openapi.json`
+- Generated contracts: `src/lib/api/generated/openapi.zod.ts`
+- Runtime boundaries/parsers:
+  - `src/lib/api/contracts.ts` (internal route payloads used by client wrappers)
+  - `src/lib/api/contracts.external.ts` (external API payloads used by server adapter)
+
 ## API Contract Strategy
 
-External payload and response shapes may vary; adapter handles this in `src/lib/api/server.ts`:
+External payload and response shapes are validated against generated contracts in `src/lib/api/server.ts`:
 
 - Read normalization:
-  - Field alias handling for snake_case and camelCase
-  - Derived summary fallback from job statuses
+  - External responses are parsed through `src/lib/api/contracts.external.ts`
+  - Contract mapping adapts external API fields into internal `JobsResponse`/`ModelOption[]` shapes
 - Write mapping:
   - Internal payload -> external required keys (`name`, `baseModel`, `epochs`, etc.)
 - Error mapping:
   - Non-2xx upstream responses throw `ExternalApiError`
+  - Invalid upstream response contracts throw `ExternalApiError` with status `502`
   - Internal route forwards upstream status/payload where relevant
 
 ## Provider Topology
@@ -127,7 +139,14 @@ Compatibility alias tokens preserve shadcn-style utility names (`background`, `f
 ## Extension Points
 
 - Introduce shared form field components for richer consistency.
-- Add stronger OpenAPI-derived types once schema generation is introduced.
+- Add a spec-patching layer before generation if upstream contract drift becomes frequent.
+
+## OpenAPI Generation Workflow
+
+1. `npm run api:sync` fetches the latest OpenAPI JSON to `src/lib/api/generated/openapi.json`.
+2. `npm run api:generate` regenerates `src/lib/api/generated/openapi.zod.ts`.
+3. `npm run api:regen` runs both commands when contract updates are needed.
+4. `src/lib/api/generated/openapi.zod.ts` is gitignored and regenerated automatically via lifecycle scripts before dev/build/typecheck/test.
 
 ## Developer Tooling
 
