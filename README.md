@@ -74,7 +74,7 @@ npm run lint && npm run typecheck && npm run build && npm run test
 
 ## Testing
 
-The test suite uses Vitest, Testing Library, and MSW.
+The test suite uses Vitest and Testing Library.
 
 - Schema tests: request validation contracts in `src/lib/schemas/*`
 - Adapter tests: normalization and error mapping in `src/lib/api/server.ts`

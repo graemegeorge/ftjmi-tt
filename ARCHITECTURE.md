@@ -64,7 +64,7 @@ High-level layers:
 
 ## Testing Strategy
 
-The repo uses a risk-based test suite (Vitest + Testing Library + MSW):
+The repo uses a risk-based test suite (Vitest + Testing Library):
 
 - `src/lib/schemas/*.test.ts`: Zod validation and cross-field rules.
 - `src/lib/api/*.test.ts`: Client/server adapter behavior and error handling.
